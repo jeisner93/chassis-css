@@ -1,0 +1,18 @@
+//
+// Chassis.css global v5.0.0
+//
+// MIT License
+// https://chassis.joeleisner.com/
+//
+
+// ---- Rules ----
+
+@mixin rules($rules) {
+    @each $rule, $value in $rules {
+        #{$rule}: $value;
+    }
+}
+
+// ---- Spacing ----
+
+$spacing: 1rem !default;

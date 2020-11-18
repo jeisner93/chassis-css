@@ -1,0 +1,39 @@
+//
+// Chassis.css media v5.0.0
+//
+// MIT License
+// https://chassis.joeleisner.com/
+//
+
+// ---- Libraries ----
+
+@use "sass:map";
+
+// ---- Breakpoints ----
+
+// Small breakpoint
+$breakpoint--sm: 768px !default;
+// Medium breakpoint
+$breakpoint--md: 992px !default;
+// Large breakpoint
+$breakpoint--lg: 1200px !default;
+// Breakpoints
+$breakpoints: () !default;
+$breakpoints: map.merge((
+    "xs": 100%,
+    "sm": 768px,
+    "md": 992px,
+    "lg": 1200px
+), $breakpoints);
+
+@mixin breakpoint($breakpoint: "sm") {
+    $breakpoints: map-remove($breakpoints, "xs");
+    $min-width: map-get($breakpoints, $breakpoint);
+    @if $min-width {
+        @media (min-width: $min-width) {
+            @content;
+        }
+    } @else {
+        @content;
+    }
+}

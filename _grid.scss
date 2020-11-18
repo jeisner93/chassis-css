@@ -1,0 +1,283 @@
+//
+// Chassis.css grid v5.0.0
+//
+// MIT License
+// https://chassis.joeleisner.com/
+//
+
+// ---- Libraries ----
+
+@use "sass:map";
+
+@use "global";
+@use "media";
+
+// ---- Spacing ---
+
+$spacing: global.$spacing !default;
+
+// ---- Containers ----
+
+// Container widths
+$container--width--xs: 100% !default;
+$container--width--sm: 720px !default;
+$container--width--md: 960px !default;
+$container--width--lg: 1140px !default;
+$container--widths: () !default;
+$container--widths: map.merge((
+    "xs": $container--width--xs,
+    "sm": $container--width--sm,
+    "md": $container--width--md,
+    "lg": $container--width--lg,
+), $container--widths);
+
+// Container rules
+$container--margin-left: auto !default;
+$container--margin-right: auto !default;
+$container--padding-left: $spacing !default;
+$container--padding-right: $spacing !default;
+$container: () !default;
+$container: map.merge((
+    "margin-left": $container--margin-left,
+    "margin-right": $container--margin-right,
+    "padding-left": $container--padding-left,
+    "padding-right": $container--padding-right
+), $container);
+
+@mixin container {
+    $breakpoints: map.keys(media.$breakpoints);
+
+    .container {
+        @each $breakpoint in $breakpoints {
+            @include media.breakpoint($breakpoint) {
+                width: map.get($container--widths, $breakpoint);
+            }
+        }
+        @include global.rules($container);
+    }
+}
+
+// ---- Rows ----
+
+// Row rules
+$row--display: flex !default;
+$row--flex-wrap: wrap !default;
+$row--margin-left: -($spacing) !default;
+$row--margin-right: -($spacing) !default;
+$row: () !default;
+$row: map.merge((
+    "display": $row--display,
+    "flex-wrap": $row--flex-wrap,
+    "margin-left": $row--margin-left,
+    "margin-right": $row--margin-right
+), $row);
+
+// Reversed row rules
+$row--reverse--flex-flow: row-reverse wrap-reverse !default;
+$row--reverse: () !default;
+$row--reverse: map.merge((
+    "flex-flow": $row--reverse--flex-flow
+), $row--reverse);
+
+@mixin row--reverse {
+    .row.rev {
+        @include global.rules($row--reverse);
+    }
+}
+
+@mixin row {
+    .row {
+        @include global.rules($row);
+    }
+
+    @include row--reverse;
+}
+
+// ---- Columns ----
+
+// Column count
+$column--count: 12 !default;
+
+// Column rules
+$column--padding-left: $spacing !default;
+$column--padding-right: $spacing !default;
+$column: () !default;
+$column: map.merge((
+    "padding-left": $column--padding-left,
+    "padding-right": $column--padding-right
+), $column);
+
+// Full-width column rules
+$column--full--flex: 1 !default;
+$column--full: () !default;
+$column--full: map.merge((
+    "flex": $column--full--flex
+), $column--full);
+
+@mixin column--width($number) {
+    $span: $number / $column--count;
+    flex: 0 0 $span * 100%;
+    max-width: $span * 100%;
+}
+
+@mixin column {
+    [class*="col"] {
+        @include column--width($column--count);
+        @include global.rules($column);
+    }
+
+    .col {
+        @include media.breakpoint {
+            @include global.rules($column--full);
+        }
+    }
+
+    @for $number from 1 through $column--count {
+        .col-#{$number} {
+            @include media.breakpoint {
+                @include column--width($number);
+            }
+        }
+    }
+}
+
+// ---- Alignment ----
+
+// Vertical alignment rules
+$alignment--vertical--start: flex-start !default;
+$alignment--vertical--center: center !default;
+$alignment--vertical--end: flex-end !default;
+$alignment--vertical: () !default;
+$alignment--vertical: map.merge((
+    "s": $alignment--vertical--start,
+    "c": $alignment--vertical--center,
+    "e": $alignment--vertical--end
+), $alignment--vertical);
+
+@mixin alignment--vertical {
+    @each $letter, $alignment in $alignment--vertical {
+        .a {
+            &i-#{$letter} {
+                align-items: $alignment;
+            }
+            &c-#{$letter} {
+                align-content: $alignment;
+            }
+            &s-#{$letter} {
+                align-self: $alignment;
+            }
+        }
+    }
+}
+
+// Horizontal alignment rules
+$alignment--horizontal--start: flex-start !default;
+$alignment--horizontal--center: center !default;
+$alignment--horizontal--end: flex-end !default;
+$alignment--horizontal--around: space-around !default;
+$alignment--horizontal--between: space-between !default;
+$alignment--horizontal: () !default;
+$alignment--horizontal: map.merge((
+    "s": $alignment--horizontal--start,
+    "c": $alignment--horizontal--center,
+    "e": $alignment--horizontal--end,
+    "a": $alignment--horizontal--around,
+    "b": $alignment--horizontal--between
+), $alignment--horizontal);
+
+@mixin alignment--horizontal {
+    @each $letter, $alignment in $alignment--horizontal {
+        .jc-#{$letter} {
+            justify-content: $alignment;
+        }
+    }
+}
+
+@mixin alignment() {
+    @include alignment--vertical;
+    @include alignment--horizontal;
+}
+
+// ---- Offsets ----
+
+// Offset rules
+$offset--margin-left: 0 !default;
+$offset: () !default;
+$offset: map.merge((
+    "margin-left": $offset--margin-left
+), $offset);
+
+// Auto offset rules
+$offset--auto--margin-left: auto !default;
+$offset--auto: () !default;
+$offset--auto: map.merge((
+    "margin-left": $offset--auto--margin-left
+), $offset--auto);
+
+@mixin offset--margin-left($number) {
+    margin-left: $number / $column--count * 100%;
+}
+
+@mixin offset {
+    [class*="os"] {
+        @include global.rules($offset);
+    }
+
+    .os-a {
+        @include media.breakpoint {
+            @include global.rules($offset--auto);
+        }
+    }
+
+    @for $number from 1 through $column--count - 1 {
+        .os-#{$number} {
+            @include media.breakpoint {
+                @include offset--margin-left($number);
+            }
+        }
+    }
+}
+
+// ---- Order ----
+
+// Reset order rules
+$order--reset--order: initial !default;
+$order--reset: () !default;
+$order--reset: map.merge((
+    "order": $order--reset--order
+), $order--reset);
+
+@mixin order--reset {
+    [class*="or-r"] {
+        @include global.rules($order--reset);
+    }
+
+    @for $number from 1 through $column--count {
+        .or-r#{$number} {
+            @include media.breakpoint {
+                order: $number;
+            }
+        }
+    }
+}
+
+@mixin order {
+    @for $number from 1 through $column--count {
+        .or-#{$number} {
+            order: $number;
+        }
+    }
+
+    @include order--reset;
+}
+
+// ---- Grid ----
+
+@mixin build {
+    @include container;
+    @include row;
+    @include column;
+    @include alignment;
+    @include offset;
+    @include order;
+}

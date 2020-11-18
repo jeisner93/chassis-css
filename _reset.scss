@@ -1,0 +1,311 @@
+//
+// Chassis.css reset v5.0.0
+//
+// MIT License
+// https://chassis.joeleisner.com/
+//
+
+// ---- Libraries ----
+
+@use "sass:list";
+@use "sass:map";
+
+@use "global";
+
+// ---- All elements ----
+
+// All element box sizing
+$all--box-sizing: border-box !default;
+// All element rules
+$all: () !default;
+$all: map.merge((
+    "box-sizing": $all--box-sizing
+), $all);
+
+@mixin all {
+    *, *::before, *::after {
+        @include global.rules($all);
+    }
+}
+
+// ---- HTML ----
+
+// HTML line height
+$html--line-height: 1.15 !default;
+// HTML Webkit font smoothing
+$html--webkit-font-smoothing: antialiased !default;
+// HTML Mozilla/OSX font smoothing
+$html--moz-osx-font-smoothing: grayscale !default;
+// HTML Webkit text size adjust
+$html--webkit-text-size-adjust: 100% !default;
+// HTML rules
+$html: () !default;
+$html: map.merge((
+    "line-height": $html--line-height,
+    "-webkit-font-smoothing": $html--webkit-font-smoothing,
+    "-moz-osx-font-smoothing": $html--moz-osx-font-smoothing,
+    "-webkit-text-size-adjust": $html--webkit-text-size-adjust
+), $html);
+
+@mixin html {
+    html {
+        @include global.rules($html);
+    }
+}
+
+// ---- Body & inputs ----
+
+// Body & input margins
+$body-input--margin: 0 !default;
+// Body & input rules
+$body-input: () !default;
+$body-input: map.merge((
+    "margin": $body-input--margin
+), $body-input);
+
+@mixin body-input {
+    body, input {
+        @include global.rules($body-input);
+    }
+}
+
+// ---- Heading elements & classes ----
+
+// Headings
+$heading--elements: h1, h2, h3, h4, h5, h6 !default;
+// Heading margin top
+$heading--margin-top: 0 !default;
+// Heading margin bottom
+$heading--margin-bottom: .5rem !default;
+// Heading rules
+$headings: () !default;
+$headings: map.merge((
+    "margin-top": $heading--margin-top,
+    "margin-bottom": $heading--margin-bottom
+), $headings);
+
+// H1 font size
+$h1--font-size: 2.5rem !default;
+// H2 font size
+$h2--font-size: 2rem !default;
+// H3 font size
+$h3--font-size: 1.75rem !default;
+// H4 font size
+$h4--font-size: 1.5rem !default;
+// H5 font size
+$h5--font-size: 1.25rem !default;
+// H6 font size
+$h6--font-size: 1rem !default;
+// Heading font sizes
+$heading--font-sizes: () !default;
+$heading--font-sizes: map.merge((
+    "h1": $h1--font-size,
+    "h2": $h2--font-size,
+    "h3": $h3--font-size,
+    "h4": $h4--font-size,
+    "h5": $h5--font-size,
+    "h6": $h6--font-size
+), $heading--font-sizes);
+
+@function heading--class($headings) {
+    $output: ();
+
+    @each $heading in $headings {
+        $output: list.append($output, "." + $heading, comma);
+    }
+
+    @return $output;
+}
+
+@mixin headings {
+    #{$heading--elements}, #{heading--class($heading--elements)} {
+        @include global.rules($headings);
+    }
+
+    @each $heading in $heading--elements {
+        #{$heading}, #{heading--class($heading)} {
+            font-size: map.get($heading--font-sizes, $heading);
+        }
+    }
+}
+
+// ---- Text -----
+
+// Text top margin
+$text--margin-top: 0 !default;
+// Text bottom margin
+$text--margin-bottom: 1rem !default;
+// Text rules
+$text: () !default;
+$text: map.merge((
+    "margin-top": $text--margin-top,
+    "margin-bottom": $text--margin-bottom
+), $text);
+
+@mixin text {
+    p, ul, ol, dl, pre {
+        @include global.rules($text);
+    }
+}
+
+// ---- Nested list ----
+
+// Nested list bottom margin
+$nested-list--margin-bottom: 0 !default;
+// Nested list rules
+$nested-lists: () !default;
+$nested-lists: map.merge((
+    "margin-bottom": $nested-list--margin-bottom
+), $nested-lists);
+
+@mixin nested-lists {
+    ul ul, ul ol,
+    ol ol, ol ul {
+        @include global.rules($nested-lists);
+    }
+}
+
+// ---- Small text ----
+
+// Small text font size
+$small--font-size: 0.5em !default;
+// Small text rules
+$small: () !default;
+$small: map.merge((
+    "font-size": $small--font-size
+), $small);
+
+@mixin small {
+    small {
+        @include global.rules($small);
+    }
+}
+
+// ---- Strong text ----
+
+// Strong text font weight
+$strong--font-weight: bold !default;
+// Strong text rules
+$strong: () !default;
+$strong: map.merge((
+    "font-weight": $strong--font-weight
+), $strong);
+
+@mixin strong {
+    strong, dt, #{heading--class($heading--elements)} {
+        @include global.rules($strong);
+    }
+}
+
+// ---- Emphasized text ----
+
+// Emphasized text font style
+$em--font-style: italic !default;
+// Emphasized text rules
+$em: () !default;
+$em: map.merge((
+    "font-style": $em--font-style
+), $em);
+
+@mixin em {
+    em {
+        @include global.rules($em);
+    }
+}
+
+// ---- Description list definitions ----
+
+// Description list definition left margin
+$dd--margin-left: 0 !default;
+// Description list definition bottom margin
+$dd--margin-bottom: .5rem !default;
+// Description list definition rules
+$dd: () !default;
+$dd: map.merge((
+    "margin-left": $dd--margin-left,
+    "margin-bottom": $dd--margin-bottom
+), $dd);
+
+@mixin dd {
+    dd {
+        @include global.rules($dd);
+    }
+}
+
+// ---- Blockquotes ----
+
+// Blockquote margins
+$blockquote--margin: 0 0 1rem !default;
+// Blockquote font-size
+$blockquote--font-size: 1.25rem !default;
+// Blockquote rules
+$blockquotes: () !default;
+$blockquotes: map.merge((
+    "margin": $blockquote--margin,
+    "font-size": $blockquote--font-size
+), $blockquotes);
+
+@mixin blockquotes {
+    blockquote {
+        @include global.rules($blockquotes);
+    }
+}
+
+// ---- Fieldsets ----
+
+// Fieldset minimum width
+$fieldset--min-width: 0 !default;
+// Fieldset margins
+$fieldset--margin: 0 !default;
+// Fieldset padding
+$fieldset--padding: 0 !default;
+// Fieldset border
+$fieldset--border: 0 !default;
+// Fieldset rules
+$fieldsets: () !default;
+$fieldsets: map.merge((
+    "min-width": $fieldset--min-width,
+    "margin": $fieldset--margin,
+    "padding": $fieldset--padding,
+    "border": $fieldset--border
+), $fieldsets);
+
+@mixin fieldsets {
+    fieldset {
+        @include global.rules($fieldsets);
+    }
+}
+
+// ---- Monospace & code elements ----
+
+// Monospace font size
+$monospace--font-size: 1rem !default;
+// Monospace rules
+$monospace: () !default;
+$monospace: map.merge((
+    "font-size": $monospace--font-size
+), $monospace);
+
+@mixin monospace {
+    pre, code, kbd, samp {
+        @include global.rules($monospace);
+    }
+}
+
+// ---- Reset ----
+
+@mixin build {
+    @include all;
+    @include html;
+    @include body-input;
+    @include headings;
+    @include text;
+    @include nested-lists;
+    @include small;
+    @include strong;
+    @include em;
+    @include dd;
+    @include blockquotes;
+    @include fieldsets;
+    @include monospace;
+}

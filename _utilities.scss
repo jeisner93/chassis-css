@@ -1,0 +1,270 @@
+//
+// Chassis.css utilities v5.0.0
+//
+// MIT License
+// https://chassis.joeleisner.com/
+//
+
+// ---- Libraries ----
+
+@use "sass:list";
+@use "sass:map";
+
+@use "global";
+@use "media";
+
+// ---- Text alignment ----
+
+// Text left alignment
+$text--alignment--left: left !default;
+// Text center alignment
+$text--alignment--center: center !default;
+// Text right alignment
+$text--alignment--right: right !default;
+// Text justify alignment
+$text--alignment--justify: justify !default;
+// Text alignments
+$text--alignment: () !default;
+$text--alignment: map.merge((
+    "l": $text--alignment--left,
+    "c": $text--alignment--center,
+    "r": $text--alignment--right,
+    "j": $text--alignment--justify
+), $text--alignment);
+
+@mixin text--alignment {
+    @each $modifier, $alignment in $text--alignment {
+        .t-#{$modifier} {
+            text-align: $alignment;
+        }
+    }
+}
+
+// ---- List styles ----
+
+// List utility list style
+$list--style: none !default;
+// List utility margin-left
+$list--margin-left: 0 !default;
+// List utility padding-left
+$list--padding-left: 0 !default;
+// List utility rules
+$list: () !default;
+$list: map.merge((
+    "list-style": $list--style,
+    "margin-left": $list--margin-left,
+    "padding-left": $list--padding-left
+), $list);
+
+// Inline list item display
+$list--inline-item--display: inline-block !default;
+// Inline list item rules
+$list--inline-item: () !default;
+$list--inline-item: map.merge((
+    "display": $list--inline-item--display
+), $list--inline-item);
+
+@mixin list {
+    .l-u, .l-i {
+        @include global.rules($list);
+    }
+    .l-i li {
+        @include global.rules($list--inline-item);
+    }
+}
+
+// ---- Screen reader ----
+
+// Screen reader position
+$screen-reader--position: absolute !default;
+// Screen reader width
+$screen-reader--width: 1px !default;
+// Screen reader height
+$screen-reader--height: 1px !default;
+// Screen reader padding
+$screen-reader--padding: 0 !default;
+// Screen reader margin
+$screen-reader--margin: -1px !default;
+// Screen reader overflow
+$screen-reader--overflow: hidden !default;
+// Screen reader clip
+$screen-reader--clip: rect(0,0,0,0) !default;
+// Screen reader border
+$screen-reader--border: 0 !default;
+// Screen reader rules
+$screen-reader: () !default;
+$screen-reader: map.merge((
+    "position": $screen-reader--position,
+    "width": $screen-reader--width,
+    "height": $screen-reader--height,
+    "padding": $screen-reader--padding,
+    "margin": $screen-reader--margin,
+    "overflow": $screen-reader--overflow,
+    "clip": $screen-reader--clip,
+    "border": $screen-reader--border
+), $screen-reader);
+
+// Screen reader focusable position
+$screen-reader--focusable--position: static !default;
+// Screen reader focusable width
+$screen-reader--focusable--width: auto !default;
+// Screen reader focusable height
+$screen-reader--focusable--height: auto !default;
+// Screen reader focusable overflow
+$screen-reader--focusable--overflow: visible !default;
+// Screen reader focusable clip
+$screen-reader--focusable--clip: auto !default;
+// Screen reader focusable white space
+$screen-reader--focusable--white-space: normal !default;
+// Screen reader focusable rules
+$screen-reader--focusable: () !default;
+$screen-reader--focusable: map.merge((
+    "position": $screen-reader--focusable--position,
+    "width": $screen-reader--focusable--width,
+    "height": $screen-reader--focusable--height,
+    "overflow": $screen-reader--focusable--overflow,
+    "clip": $screen-reader--focusable--clip,
+    "white-space": $screen-reader--focusable--white-space
+), $screen-reader--focusable);
+
+// Generate screen reader classes
+@mixin screen-reader {
+    .sr {
+        @include global.rules($screen-reader);
+    }
+
+    .sr-f {
+        &:active, &:focus {
+            @include global.rules($screen-reader--focusable);
+        }
+    }
+}
+
+// ---- Spacing ----
+
+// Margin padding auto spacing
+$spacing--auto: auto !default;
+// Margin padding zero spacing
+$spacing--zero: 0 !default;
+// Margin padding third spacer
+$spacing--third: global.$spacing / 3 !default;
+// Margin padding half spacer
+$spacing--half: global.$spacing / 2 !default;
+// Margin padding full spacer
+$spacing--full: global.$spacing !default;
+// Margin padding double spacer
+$spacing--double: global.$spacing * 2 !default;
+// Margin padding spacers
+$spacing: () !default;
+$spacing: map.merge((
+    "a": $spacing--auto,
+    "z": $spacing--zero,
+    "t": $spacing--third,
+    "h": $spacing--half,
+    "f": $spacing--full,
+    "d": $spacing--double
+), $spacing);
+
+// Margin padding left side
+$spacing--side--left: left !default;
+// Margin padding top side
+$spacing--side--top: top !default;
+// Margin padding right side
+$spacing--side--right: right !default;
+// Margin padding bottom side
+$spacing--side--bottom: bottom !default;
+// Margin padding sides
+$spacing--sides: () !default;
+$spacing--sides: map.merge((
+    "l": left,
+    "t": top,
+    "r": right,
+    "b": bottom
+), $spacing--sides);
+
+@mixin spacing--classes($key, $modifier, $rule, $value) {
+    .#{$key} {
+        &-#{$modifier} {
+            #{$rule}: $value;
+        }
+        @each $letter, $side in $spacing--sides {
+            &#{$letter}-#{$modifier} {
+                #{$rule}-#{$side}: $value;
+            }
+        }
+    }
+}
+
+@mixin spacing--margins {
+    $spacing--positive: $spacing;
+    @each $modifier, $margin in $spacing--positive {
+        @include spacing--classes("m", $modifier, margin, $margin);
+    }
+
+    $spacing--negative: map.remove($spacing, a, z);
+    @each $modifier, $margin in $spacing--negative {
+        @include spacing--classes("m", "n#{$modifier}", margin, -$margin);
+    }
+}
+
+@mixin spacing--padding {
+    $spacing: map.remove($spacing, a);
+    @each $modifier, $padding in $spacing {
+        @include spacing--classes("p", $modifier, padding, $padding);
+    }
+}
+
+@mixin spacing {
+    @include spacing--margins;
+    @include spacing--padding;
+}
+
+// ---- Visibility ----
+
+@mixin visibility--classes($breakpoint) {
+    $breakpoints: map.keys(media.$breakpoints);
+
+    .#{$breakpoint}-s {
+        @each $point in $breakpoints {
+            @include media.breakpoint($point) {
+                $show: $point == $breakpoint;
+                @if $show {
+                    display: block;
+                } @else {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    .#{$breakpoint}-h {
+        @each $point in $breakpoints {
+            @include media.breakpoint($point) {
+                $hide: $point == $breakpoint;
+                @if $hide {
+                    display: none;
+                } @else {
+                    display: block;
+                }
+            }
+        }
+    }
+}
+
+@mixin visibility {
+    $breakpoints: map.keys(media.$breakpoints);
+
+    @each $breakpoint in $breakpoints {
+        @include visibility--classes($breakpoint);
+    }
+}
+
+// ---- Utilities ----
+
+@mixin build {
+    @include text--alignment;
+    @include list;
+    @include screen-reader;
+    @include spacing;
+    @include visibility;
+}
